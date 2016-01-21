@@ -1,5 +1,6 @@
 class Maze{
 private:
+
 	int width_, height_;
 
 	void place_block(int x, int y);
@@ -10,6 +11,13 @@ private:
 	
 	int get_vec_pos(int x, int y) const;
 public:
+	class Block{
+		private:
+			
+		public:
+			
+	};
+
 	Maze();
 	Maze(int width, int height);
 };
