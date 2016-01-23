@@ -2,8 +2,8 @@
 #include "cstdio"
 #include "cstdlib"
 
-#include "include/maze.h"
-#include "include/rand.h"
+#include "headers/maze.h"
+#include "headers/rand.h"
 
 using namespace std;
 

@@ -3,8 +3,8 @@
 #include "cstdlib"
 #include "unistd.h"
 
-#include "include/rand.h"
-#include "include/maze.h"
+#include "headers/rand.h"
+#include "headers/maze.h"
 
 using namespace std;
 
