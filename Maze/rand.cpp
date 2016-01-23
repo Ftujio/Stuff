@@ -8,7 +8,7 @@
 using namespace std;
 
 Rand::Rand(){
-	throw RandError();
+	
 }
 
 int Rand::get_rand(){

@@ -2,8 +2,8 @@ class Rand{
 private:
 	class RandError{
 	public:
-		RandError(int err);
 		RandError();
+		RandError(int err);
 	};
 public:
 	Rand();
