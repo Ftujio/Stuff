@@ -9,7 +9,6 @@ using namespace std;
 
 Maze::Maze(): width_(25), height_(20){ // Default width and height
 	gen_maze(width_, height_);
-	cout << a << endl;
 }
 
 Maze::Maze(int width, int height): width_(width), height_(height){
