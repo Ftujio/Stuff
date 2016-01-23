@@ -3,7 +3,7 @@
 #include "cstdio"
 #include "time.h"
 
-#include "include/rand.h"
+#include "headers/rand.h"
 
 using namespace std;
 

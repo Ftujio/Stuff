@@ -15,7 +15,7 @@ Maze::Maze(int width, int height): width_(width), height_(height){
 	gen_maze(width_, height_);
 }
 
-void Maze::place_block(int x, int y){}
+void Maze::place_wall(int x, int y){}
 
 void Maze::remove_block(int x, int y){}
 
