@@ -3,6 +3,8 @@
 #include "cstdlib"
 #include "string"
 
+#include "headers/player.h"
+
 using namespace std;
 
 int main(){

@@ -1,2 +1,2 @@
 all:
-	g++ main.cc Player.cc headers/Player.h -o game
+	g++ main.cc player.cc mage.cc headers/player.h headers/mage.h -o game
