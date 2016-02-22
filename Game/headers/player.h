@@ -19,5 +19,5 @@ public:
 	void set_attack(int attack);
 	void set_magic(int magic);
 	
-	virtual int attack() = 0;
+	int attack();
 };

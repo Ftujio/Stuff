@@ -3,12 +3,14 @@
 #include "cstdlib"
 #include "string"
 
-#include "headers/player.h"
+#include "headers/mage.h"
 
 using namespace std;
 
 int main(){
+	Mage m("Gandalf the Gray", 15, 2, 100);
 	
+	cout << m.get_name() << " attacked you with " << m.get_magic() << " magic. GET REKT" << endl;
 
 	return 0;
 }
