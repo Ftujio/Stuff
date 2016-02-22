@@ -8,7 +8,7 @@
 using namespace std;
 
 int main(){
-	Mage m("Gandalf the Gray", 15, 2, 100);
+	Mage m;
 	
 	cout << m.get_name() << " attacked you with " << m.get_magic() << " magic. GET REKT" << endl;
 
