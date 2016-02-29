@@ -11,7 +11,13 @@ class Player{
 
 		int xp_, level_;
 	public:
-
+		int calc_level(){
+			int level = 0;
+			while(xp_/2.5 >= 100){
+				level++;
+			}
+			return level;
+		}
 	};
 
 public:
