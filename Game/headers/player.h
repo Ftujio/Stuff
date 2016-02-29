@@ -52,7 +52,7 @@ public:
 	void set_hp(int hp);
 	void set_attack(int attack);
 	void set_magic(int magic);
-	
+
 	void add_taunt(string taunt, int set_place);
 	string get_taunt(int taunt_num)const;
 
@@ -60,5 +60,5 @@ public:
 	int get_level()const;
 	void add_xp(int amount);	
 	
-	virtual int attack() = 0;
+	virtual int attack(int attack);
 };

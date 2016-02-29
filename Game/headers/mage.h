@@ -10,5 +10,5 @@ public:
 	Mage(string name, int hp, int attack, int magic);
 	Mage();
 	
-	int attack();
+	int attack(int attack);
 };
