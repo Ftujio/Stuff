@@ -1,1 +1,1 @@
-This is a text based action RPG that I'm making for fun. Working both at home and school.
+This is my main repository where i put my little projects from school and stuff.
