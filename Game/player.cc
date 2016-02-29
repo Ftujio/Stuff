@@ -43,3 +43,7 @@ void Player::add_taunt(string taunt){
 	taunts_[taunt_num_] = taunt;
 	taunt_num_++;
 }
+
+void Player::add_xp(int amount, Level& l){
+	l.add_xp(amount);
+}

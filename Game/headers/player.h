@@ -7,18 +7,24 @@ class Player{
 	int hp_, attack_, magic_, taunt_num_;
 
 	class Level{
-		friend class Player;
-
 		int xp_, level_;
-	public:
+
 		int calc_level(){
 			int level = 0;
 			while(xp_/2.5 >= 100){
 				level++;
 			}
+			level_ = level;
 			return level;
 		}
+	public:
+		void add_xp(int amount){
+			xp_ += amount;
+			level_ = calc_level();
+		}
 	};
+
+	Level l;
 
 public:
 	Player(string name, int hp, int attack, int magic);
@@ -35,6 +41,7 @@ public:
 	void set_attack(int attack);
 	void set_magic(int magic);
 	void add_taunt(string taunt);
+	void add_xp(int amount, Level& l);
 	
 	virtual int attack() = 0;
 };
