@@ -57,7 +57,7 @@ public:
 	void set_hp(int hp);
 	void set_attack(int attack);
 	void set_magic(int magic);
-	void add_taunt(string taunt);
+	void add_taunt(string taunt, int set_place);
 	void add_xp(int amount);
 	
 	virtual int attack() = 0;
