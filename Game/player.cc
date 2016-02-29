@@ -44,6 +44,14 @@ void Player::add_taunt(string taunt){
 	taunt_num_++;
 }
 
-void Player::add_xp(int amount, Level& l){
+void Player::add_xp(int amount){
 	l.add_xp(amount);
+}
+
+int Player::get_xp() const {
+	return l.get_xp();
+}
+
+int Player::get_level()const{
+	return l.get_level();
 }
