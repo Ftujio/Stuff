@@ -68,13 +68,12 @@ public:
 		for(int i = 0; i < bomb_num; i++){
 			//const long double sysTime = time(0);
 			//const long double sysTimeMS = sysTime*1000;
-			srand(time(0) + i*(i + time(0)));
+			srand(time(0) + i);
 			rand_vec_pos = rand()&(width_*height_);
 			
 			if(is_empty(rand_vec_pos)){
 				field_[rand_vec_pos].set_content('^');
 			} else {
-				cout << i << ",";
 			}
 		}
 		cout << endl;

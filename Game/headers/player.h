@@ -5,6 +5,15 @@ using std::string;
 class Player{
 	string name_, taunts_[5];
 	int hp_, attack_, magic_, taunt_num_;
+
+	class Level{
+		friend class Player;
+
+		int xp_, level_;
+	public:
+
+	};
+
 public:
 	Player(string name, int hp, int attack, int magic);
 	Player();
