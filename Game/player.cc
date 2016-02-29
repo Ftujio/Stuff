@@ -3,9 +3,8 @@
 
 using namespace std;
 
-Player::Player(string name, int hp, int attack, int magic): name_(name), hp_(hp), attack_(attack), magic_(magic), taunt_num_(2){
-	taunts_[0] = "N00b!";
-	taunts_[1] = "GET REKT!";
+Player::Player(string name, int hp, int attack, int magic): name_(name), hp_(hp), attack_(attack), magic_(magic), taunt_num_(1){
+	taunts_[0] = "GET REKT!";
 }
 
 Player::Player(): name_("Joe"), hp_(10), attack_(1), magic_(0){}

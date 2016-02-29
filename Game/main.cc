@@ -19,8 +19,11 @@ int main(){
 	cout << m.get_xp() << endl;
 	cout << m.get_level() << endl;
 	*/
-
-	
+	cout << m.get_taunt(0) << endl;
+	m.add_taunt("You suck!", -1);
+	cout << m.get_taunt(1) << endl;
+	m.add_taunt("Uninstall!", -1);
+	cout << m.get_taunt(2) << endl;
 
 	return 0;
 }
