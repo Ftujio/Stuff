@@ -9,7 +9,7 @@ using namespace std;
 
 int main(){
 	Mage m;
-	/*
+	
 	cout << m.get_level() << endl;
 	cout << m.get_xp() << endl;
 	m.add_xp(500);
@@ -17,9 +17,9 @@ int main(){
 	m.add_xp(30);
 	cout << m.get_xp() << endl;
 	cout << m.get_level() << endl;
-	*/
-
 	
+
+
 
 	return 0;
 }
