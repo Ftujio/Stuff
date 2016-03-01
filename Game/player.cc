@@ -7,7 +7,7 @@ Player::Player(string name, int hp, int attack, int magic): name_(name), hp_(hp)
 	taunts_[0] = "GET REKT!";
 }
 
-Player::Player(): name_("Joe"), hp_(10), attack_(1), magic_(0){}
+Player::Player(): name_("Joe"), hp_(10), attack_(1), magic_(0), taunt_num_(1){}
 
 string Player::get_name() const {
 	return name_;
