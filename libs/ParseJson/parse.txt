@@ -1,0 +1,16 @@
+player[ //arr
+	stats{ // arr
+		name "JOHN CENA" //element
+		attack 100
+	}
+	attacks[
+		attack1{
+			dmg 200
+			cd 4
+		}
+		attack2{
+			dmg 300
+			cd 8
+		}
+	]
+]
