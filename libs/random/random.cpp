@@ -1,17 +1,17 @@
 #include "cstdlib"
 #include "cstdio"
+#include "time.h"
 
 #include "random.h"
 
-Random::Random(){
-	srand(time(0));
-	srnad(rand());
-}
+Random::Random(){}
 
-int Random::get_random(){
+int Random::get_rand(){
+    srand(time(0)%rand());
 	return rand();
 }
 
-int Random::get_random(int from, int to){
-	return from + rand%(to+1 - from);
+int Random::get_rand(int from, int to){
+    srand(time(0)%rand());
+	return from + rand()%(to+1 - from);
 }

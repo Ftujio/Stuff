@@ -2,6 +2,6 @@ class Random{
 private:
 public:
 	Random();
-	int get_rand();
-	int get_rand(int from, int to);
+	static int get_rand();
+	static int get_rand(int from, int to);
 };
