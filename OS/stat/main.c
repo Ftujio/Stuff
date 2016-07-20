@@ -48,7 +48,7 @@ int print_dir(int argc, char* argv[]){
 	mode_t mode;
 
 	char* path = argv[1];
-	char file_t, name;
+	char file_t;
 
 	if((dir = opendir(path)) != NULL){
 		while((ent = readdir(dir)) != NULL){
@@ -58,8 +58,7 @@ int print_dir(int argc, char* argv[]){
 			}
 			mode = st.st_mode;
 			file_t = file_type(mode, 0);
-			name = ent->d_name;
-			printf("%c %s\n", file_t, name);
+			printf("%c %s\n", file_t, ent->d_name);
 		}
 	} else {
 		perror("");
