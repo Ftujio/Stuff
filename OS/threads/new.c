@@ -37,16 +37,10 @@ void* work_a(void* arg){
 void* work(void* arg){
 	while(1){
 		pthread_mutex_lock(&m);
-		if(a == 0){
-			pthread_mutex_unlock(&m);
-			break;
-		}
-		pthread_mutex_unlock(&m);
-
-		pthread_mutex_lock(&m);
 		if(a >= 10){
 			a -= 10;
 		} else {
+			pthread_mutex_unlock(&m);
 			break;
 		}
 		pthread_mutex_unlock(&m);
