@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <pthread.h>
 
-int a = 100;
+int a = 100000000;
 int p = 0;
 pthread_mutex_t mp;
 pthread_mutex_t m;
