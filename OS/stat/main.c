@@ -53,17 +53,23 @@ char file_type(mode_t mode, int index){
 
 void run_dir(){
 	while((ent = readdir(dir)) != NULL){
-			strcat(path, "/");
-			full_path = strcat(path, ent->d_name);
-			if((stat(full_path, &st)) == -1){
-				perror("stat");
-        		exit(EXIT_FAILURE);
-			}
-			mode = st.st_mode;
-			file_t = file_type(mode, 0);
-			if(file_t == 'd') run_dir();
-			printf("%c %s\n", file_t, ent->d_name);
+		printf("- %s\n", path);
+	
+		strcat(path, "/");
+		full_path = strcat(path, ent->d_name);
+		printf("-- %s\n", path);
+		
+		printf("- %s\n", full_path);
+		
+		if((stat(full_path, &st)) == -1){
+			perror("stat");
+       		exit(EXIT_FAILURE);
 		}
+		mode = st.st_mode;
+		file_t = file_type(mode, 0);
+		//if(file_t == 'd') run_dir();
+		printf("%c %s\n", file_t, ent->d_name);
+	}
 }
 
 int print_dir(int argc, char* argv[]){
