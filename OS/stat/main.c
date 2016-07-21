@@ -18,7 +18,7 @@ struct passwd* pwd;
 mode_t mode;
 
 char* path;
-char* full_path;
+char* tmp;
 char file_t;
 
 char file_type(mode_t mode, int index){
@@ -51,23 +51,30 @@ char file_type(mode_t mode, int index){
     return str[index];
 }
 
-void run_dir(){
-	while((ent = readdir(dir)) != NULL){
-		printf("- %s\n", path);
-	
-		strcat(path, "/");
-		full_path = strcat(path, ent->d_name);
-		printf("-- %s\n", path);
+void run_dir(DIR* d, char* p){
+	while((ent = readdir(d)) != NULL){
+		tmp = malloc(sizeof(char)*(strlen(path) + strlen(ent->d_name) + 2));
+		strcpy(tmp, path);
+
+		strcat(tmp, "/");
+		strcat(tmp, ent->d_name);
 		
-		printf("- %s\n", full_path);
-		
-		if((stat(full_path, &st)) == -1){
+		if((stat(tmp, &st)) == -1){
 			perror("stat");
        		exit(EXIT_FAILURE);
 		}
+
 		mode = st.st_mode;
 		file_t = file_type(mode, 0);
-		//if(file_t == 'd') run_dir();
+
+		if(file_t == 'd' && strcmp(ent->d_name, "..") != 0 && strcmp(ent->d_name, ".") != 0){ // Recursion
+			if((d = opendir(tmp)) != NULL){
+				run_dir(d, tmp);
+			} else {
+				perror("opendir");
+			}
+		}
+
 		printf("%c %s\n", file_t, ent->d_name);
 	}
 }
@@ -76,16 +83,15 @@ int print_dir(int argc, char* argv[]){
 	path = argv[1];
 
 	if((dir = opendir(path)) != NULL){
-		run_dir();
+		run_dir(dir, path);
 	} else {
-		perror("");
+		perror("opendir");
 		return EXIT_FAILURE;
 	}
 }
 
 int main(int argc, char* argv[]){
 	print_dir(argc, argv);
-
 
 	return 0;
 }
