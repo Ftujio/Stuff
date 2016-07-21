@@ -24,6 +24,8 @@ int worker_num = WORKER_START_NUM;
 pthread_mutex_t m_map;
 pthread_mutex_t m_center;
 
+pthread_mutex_t m_worker_num;
+
 void train(){
 
 }
@@ -47,15 +49,18 @@ void* work(void* args){
 
 }
 
-void run_threads(pthread_t* thread, int num){
+void create_threads(pthread_t* thread, int num){
 	int i;
 	for(i = 0; i < num; i++){
-		pthread_create(thread + i, NULL, work, NULL);
+		pthread_create(thread + i, NULL, work, (void*)&i);
+		pthread_mutex_lock(&m_worker_num);
+		worker_num++;
+		pthread_mutex_unlock(&m_worker_num);
 	}
 }
 
-void run_new_thread(){
-	
+void create_new_thread(pthread_t* thread, int thread_id){ // For id it should be passed "worer_num"
+	pthread_create(thread, NULL, work, (void*)&thread_id);
 }
 
 void finish_game(int num){
@@ -69,7 +74,7 @@ void setup_stuff(){
 	pthread_mutex_init(&m_map, NULL);
 	pthread_mutex_init(&m_center, NULL);
 
-	run_threads(p_workers, WORKER_START_NUM);
+	create_threads(p_workers, WORKER_START_NUM);
 
 	pthread_mutex_destroy(&m_map);
 	pthread_mutex_destroy(&m_center);
