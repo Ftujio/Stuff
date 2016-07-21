@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define MAP_MINERALS 100
+#define MAP_MINERALS 640
 
 #define WORKER_START_NUM 5
 #define MAX_WORKERS 200
@@ -18,7 +18,7 @@ int map_minerals = MAP_MINERALS, center_minerals = 0;
 
 // Other variables
 int soldier_num = 0;
-int worker_num = WORKER_START_NUM;
+int worker_num = 0;
 
 // Mutexes
 pthread_mutex_t m_map;
@@ -30,7 +30,7 @@ void train_soldier(){
 
 }
 
-void traint_worker(){
+void train_worker(){
 
 }
 
@@ -49,18 +49,21 @@ void mine(int id){
 	map_minerals -= 8;
 }
 
-void* work(void* args){
-	int id = *(int*)args;
+void* work(void* arg){
+	int id = *(int*)arg, dig;
 	while(1){
-		pthread_mutex_lock(&m_map);
+		dig = 0; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		pthread_mutex_lock(&m_map); 
 		if(map_minerals >= 8){
 			mine(id);
-			transport(id);
+			dig = 1;
 		} else {
 			pthread_mutex_unlock(&m_map);
 			break;
 		}
 		pthread_mutex_unlock(&m_map);
+
+		if(dig) transport(id); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 		pthread_mutex_lock(&m_center);
 		deliver(id);
@@ -70,35 +73,53 @@ void* work(void* args){
 	return NULL;
 }
 
-void create_threads(pthread_t* threads, int num){ // "num" should be passed as "WORKER_START_NUM"
-	int i;
-	for(i = 0; i < num; i++){
-		pthread_create(threads + i, NULL, work, (void*)&i);
-
-		pthread_mutex_lock(&m_worker_num);
-		worker_num++;
-		pthread_mutex_unlock(&m_worker_num);
-	}
-}
-
 void create_new_thread(pthread_t* thread, int thread_id){ // "id" should be passed as "worker_num"
 	pthread_create(thread, NULL, work, (void*)&thread_id);
+
+	pthread_mutex_lock(&m_worker_num);
+	worker_num++;
+	pthread_mutex_unlock(&m_worker_num);
 }
 
-void finish_game(pthread_t* threads, int num){ // "num" should be passed as "worker_num"
+void* get_command(void* arg){
+	char input;
+	pthread_t* scan = (pthread_t*)arg; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+	while(1){
+		scanf("%c", &input);
+		if(input == 's') create_new_thread(scan, worker_num);
+	}
+}
+
+void create_threads(pthread_t* threads, int num, pthread_t* scan){ // "num" should be passed as "WORKER_START_NUM"
 	int i;
 	for(i = 0; i < num; i++){
-		pthread_join(*threads + i, NULL);
+		int* id = malloc(sizeof(int)); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		*id = i;
+		pthread_create(&threads[i], NULL, work, (void*)id); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		pthread_mutex_lock(&m_worker_num); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		worker_num++;
+		pthread_mutex_unlock(&m_worker_num); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
+
+	pthread_create(scan, NULL, get_command, (void*)scan);
+}
+
+void finish_game(pthread_t* threads, int num, pthread_t* scan){ // "num" should be passed as "worker_num"
+	int i;
+	for(i = 0; i < num; i++){
+		pthread_join(threads[i], NULL);
+	}
+	pthread_join(*scan, NULL);
 	printf("Game finshed!\n");
 }
 
 void run_game(){
-	pthread_t workers[WORKER_START_NUM];
+	pthread_t workers[WORKER_START_NUM], scan;
 	pthread_t* p_workers = workers;
 
-	create_threads(p_workers, WORKER_START_NUM);
-	finish_game(p_workers, worker_num);
+	create_threads(p_workers, WORKER_START_NUM, &scan);
+	finish_game(p_workers, worker_num, &scan);
 }
 
 void setup_stuff(){
@@ -113,6 +134,11 @@ void setup_stuff(){
 
 int main(int argc, char* argv[]){
 	setup_stuff();
+
+	printf("minerals at map: %d\n", map_minerals);
+	printf("minerals at center: %d\n", center_minerals);
+
+	printf("number of workers: %d\n", worker_num);
 
 	return 0;
 }
