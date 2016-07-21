@@ -44,25 +44,38 @@ void mine(){
 }
 
 void* work(void* args){
+
+}
+
+void run_threads(pthread_t* thread, int num){
+	int i;
+	for(i = 0; i < num; i++){
+		pthread_create(thread + i, NULL, work, NULL);
+	}
+}
+
+void run_new_thread(){
 	
 }
 
-void finish_game(){
-
+void finish_game(int num){
+	//pthread_mutex_join();
 }
 
-void run_game(){
+void setup_stuff(){
+	pthread_t workers[WORKER_START_NUM];
+	pthread_t* p_workers = workers;
+
 	pthread_mutex_init(&m_map, NULL);
 	pthread_mutex_init(&m_center, NULL);
 
-
+	run_threads(p_workers, WORKER_START_NUM);
 
 	pthread_mutex_destroy(&m_map);
 	pthread_mutex_destroy(&m_center);
 }
 
 int main(int argc, char* argv[]){
-	run_game();
 
 	return 0;
 }
