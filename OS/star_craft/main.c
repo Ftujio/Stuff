@@ -87,18 +87,15 @@ void* get_command(void* arg){
 
 	while(1){
 		scanf("%c", &input);
-		if(input == 's'){
-			create_new_thread(scan, worker_num);
-		} else if(input == 'm'){
-			pthread_mutex_lock(&m_soldier_num);
-			if(soldier_num < 20){
+		if(soldier_num < 20){
+			if(input == 's'){
+				create_new_thread(scan, worker_num);
+			} else if(input == 'm'){
 				soldier_num++;
-				printf("number of soldiers: %d\n", soldier_num);
-			} else {
-				pthread_mutex_unlock(&m_soldier_num);
-				break;
+				printf("number of soldiers: %d\n", soldier_num); // This is for debugging
 			}
-			pthread_mutex_unlock(&m_soldier_num);
+		} else {
+			break;
 		}
 	}
 
@@ -125,11 +122,12 @@ void finish_game(pthread_t* threads, int num, pthread_t* scan){ // "num" should 
 		pthread_join(threads[i], NULL);
 	}
 	pthread_join(*scan, NULL);
+	printf("number of soldiers: %d\n", soldier_num); // This is for debugging
 
 	if(soldier_num >= 20){
 		printf("You win!\n");
 	} else {
-		printf("Meh\n");
+		printf("You loose!\n");
 	}
 }
 
@@ -154,11 +152,11 @@ void setup_stuff(){
 int main(int argc, char* argv[]){
 	setup_stuff();
 
-	printf("minerals at map: %d\n", map_minerals);
-	printf("minerals at center: %d\n", center_minerals);
+	printf("minerals at map: %d\n", map_minerals); // This is for debugging
+	printf("minerals at center: %d\n", center_minerals); // This is for debugging
 
-	printf("number of workers: %d\n", worker_num);
-	printf("number of soldiers: %d\n", soldier_num);
+	printf("number of workers: %d\n", worker_num); // This is for debugging
+	printf("number of soldiers: %d\n", soldier_num); // This is for debugging
 
 	return 0;
 }
