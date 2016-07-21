@@ -1,10 +1,8 @@
 all:
 	@setterm -term linux -back black -fore red
-	@echo -----------------------------------------
-	gcc main.c -o starcraft -pthread -std=c99
-	@echo -----------------------------------------
-
+	@echo "#########################################"
 	@setterm -term linux -back black -fore white
+	gcc main.c -o starcraft -pthread -std=c99
 
 c:
 	@setterm -term linux -back black -fore white
