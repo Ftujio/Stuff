@@ -50,13 +50,12 @@ void mine(int id){
 }
 
 void* work(void* args){
-	int id = *(int*)args, dig;
+	int id = *(int*)args;
 	while(1){
 		pthread_mutex_lock(&m_map);
-		if(dig) transport(id);
 		if(map_minerals >= 8){
 			mine(id);
-			dig = 1;
+			transport(id);
 		} else {
 			pthread_mutex_unlock(&m_map);
 			break;
