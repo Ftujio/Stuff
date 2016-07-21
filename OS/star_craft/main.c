@@ -25,14 +25,7 @@ pthread_mutex_t m_map;
 pthread_mutex_t m_center;
 
 pthread_mutex_t m_worker_num;
-
-void train_soldier(){
-
-}
-
-void train_worker(){
-
-}
+pthread_mutex_t m_soldier_num;
 
 void transport(int id){
 	printf("SCV %d is transporting minerals\n", id);
@@ -52,6 +45,13 @@ void mine(int id){
 void* work(void* arg){
 	int id = *(int*)arg, dig;
 	while(1){
+		pthread_mutex_lock(&m_soldier_num);
+		if(soldier_num >= 20){
+			pthread_mutex_unlock(&m_soldier_num);
+			break;
+		}
+		pthread_mutex_unlock(&m_soldier_num);
+
 		dig = 0; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		pthread_mutex_lock(&m_map); 
 		if(map_minerals >= 8){
@@ -87,8 +87,22 @@ void* get_command(void* arg){
 
 	while(1){
 		scanf("%c", &input);
-		if(input == 's') create_new_thread(scan, worker_num);
+		if(input == 's'){
+			create_new_thread(scan, worker_num);
+		} else if(input == 'm'){
+			pthread_mutex_lock(&m_soldier_num);
+			if(soldier_num < 20){
+				soldier_num++;
+				printf("number of soldiers: %d\n", soldier_num);
+			} else {
+				pthread_mutex_unlock(&m_soldier_num);
+				break;
+			}
+			pthread_mutex_unlock(&m_soldier_num);
+		}
 	}
+
+	return NULL;
 }
 
 void create_threads(pthread_t* threads, int num, pthread_t* scan){ // "num" should be passed as "WORKER_START_NUM"
@@ -111,7 +125,12 @@ void finish_game(pthread_t* threads, int num, pthread_t* scan){ // "num" should 
 		pthread_join(threads[i], NULL);
 	}
 	pthread_join(*scan, NULL);
-	printf("Game finshed!\n");
+
+	if(soldier_num >= 20){
+		printf("You win!\n");
+	} else {
+		printf("Meh\n");
+	}
 }
 
 void run_game(){
@@ -139,6 +158,7 @@ int main(int argc, char* argv[]){
 	printf("minerals at center: %d\n", center_minerals);
 
 	printf("number of workers: %d\n", worker_num);
+	printf("number of soldiers: %d\n", soldier_num);
 
 	return 0;
 }
