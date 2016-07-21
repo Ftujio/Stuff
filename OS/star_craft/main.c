@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define MAP_MINERALS 5000
+#define MAP_MINERALS 100
 
 #define WORKER_START_NUM 5
 #define MAX_WORKERS 200
@@ -26,61 +26,93 @@ pthread_mutex_t m_center;
 
 pthread_mutex_t m_worker_num;
 
-void train(){
+void train_soldier(){
 
 }
 
-void transport(){
-	printf("SCV N is transporting minerals\n");
+void traint_worker(){
+
+}
+
+void transport(int id){
+	printf("SCV %d is transporting minerals\n", id);
 	sleep(2);
 }
 
-void deliver(){
-	printf("SCV N delivered minerals to Command center\n");
+void deliver(int id){
+	printf("SCV %d delivered minerals to Command center\n", id);
 	center_minerals += 8;
 }
 
-void mine(){
-	printf("SCV N is mining\n");
+void mine(int id){
+	printf("SCV %d is mining\n", id);
 	map_minerals -= 8;
 }
 
 void* work(void* args){
+	int id = *(int*)args, dig;
+	while(1){
+		pthread_mutex_lock(&m_map);
+		if(dig) transport(id);
+		if(map_minerals >= 8){
+			mine(id);
+			dig = 1;
+		} else {
+			pthread_mutex_unlock(&m_map);
+			break;
+		}
+		pthread_mutex_unlock(&m_map);
+
+		pthread_mutex_lock(&m_center);
+		deliver(id);
+		pthread_mutex_unlock(&m_center);
+	}
 
 }
 
-void create_threads(pthread_t* thread, int num){
+void create_threads(pthread_t* threads, int num){ // "num" should be passed as "WORKER_START_NUM"
 	int i;
 	for(i = 0; i < num; i++){
-		pthread_create(thread + i, NULL, work, (void*)&i);
+		pthread_create(threads + i, NULL, work, (void*)&i);
+
 		pthread_mutex_lock(&m_worker_num);
 		worker_num++;
 		pthread_mutex_unlock(&m_worker_num);
 	}
 }
 
-void create_new_thread(pthread_t* thread, int thread_id){ // For id it should be passed "worer_num"
+void create_new_thread(pthread_t* thread, int thread_id){ // "id" should be passed as "worker_num"
 	pthread_create(thread, NULL, work, (void*)&thread_id);
 }
 
-void finish_game(int num){
-	//pthread_mutex_join();
+void finish_game(pthread_t* threads, int num){ // "num" should be passed as "worker_num"
+	int i;
+	for(i = 0; i < num; i++){
+		pthread_join(*threads + i, NULL);
+	}
+	printf("Game finshed!\n");
 }
 
-void setup_stuff(){
+void run_game(){
 	pthread_t workers[WORKER_START_NUM];
 	pthread_t* p_workers = workers;
 
+	create_threads(p_workers, WORKER_START_NUM);
+	finish_game(p_workers, worker_num);
+}
+
+void setup_stuff(){
 	pthread_mutex_init(&m_map, NULL);
 	pthread_mutex_init(&m_center, NULL);
 
-	create_threads(p_workers, WORKER_START_NUM);
+	run_game();
 
 	pthread_mutex_destroy(&m_map);
 	pthread_mutex_destroy(&m_center);
 }
 
 int main(int argc, char* argv[]){
+	setup_stuff();
 
 	return 0;
 }
