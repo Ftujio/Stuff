@@ -67,6 +67,7 @@ void* work(void* args){
 		pthread_mutex_unlock(&m_center);
 	}
 
+	return NULL;
 }
 
 void create_threads(pthread_t* threads, int num){ // "num" should be passed as "WORKER_START_NUM"
