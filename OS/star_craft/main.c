@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define MAP_MINERALS 640
+#define MAP_MINERALS 500
 
 #define WORKER_START_NUM 5
 #define MAX_WORKERS 200
