@@ -52,12 +52,45 @@ char file_type(mode_t mode, int index){
 }
 
 void run_dir(DIR* d, char* p){
+	printf("%s: \n", p);
+
 	while((ent = readdir(d)) != NULL){
-		tmp = malloc(sizeof(char)*(strlen(path) + strlen(ent->d_name) + 2));
-		strcpy(tmp, path);
+		tmp = malloc(sizeof(char)*(strlen(p) + strlen(ent->d_name) + 2));
+		strcpy(tmp, p);
 
 		strcat(tmp, "/");
 		strcat(tmp, ent->d_name);
+		//printf("[LOG]tmp: %s\n", tmp);
+		
+		if((stat(tmp, &st)) == -1){
+			perror("stat");
+       		exit(EXIT_FAILURE);
+		}
+
+		mode = st.st_mode;
+		file_t = file_type(mode, 0);
+
+		printf("%c %s\n", file_t, ent->d_name);
+	}
+
+	printf("\n");
+
+	closedir(d);
+
+	if((d = opendir(p)) != NULL){
+
+	} else {
+		perror("opendir");
+		exit(EXIT_FAILURE);
+	}
+
+	while((ent = readdir(d)) != NULL){
+		tmp = malloc(sizeof(char)*(strlen(p) + strlen(ent->d_name) + 2));
+		strcpy(tmp, p);
+
+		strcat(tmp, "/");
+		strcat(tmp, ent->d_name);
+		//printf("[LOG]tmp: %s\n", tmp);
 		
 		if((stat(tmp, &st)) == -1){
 			perror("stat");
@@ -68,14 +101,16 @@ void run_dir(DIR* d, char* p){
 		file_t = file_type(mode, 0);
 
 		if(file_t == 'd' && strcmp(ent->d_name, "..") != 0 && strcmp(ent->d_name, ".") != 0){ // Recursion
-			if((d = opendir(tmp)) != NULL){
-				run_dir(d, tmp);
+			DIR* direct;
+			//printf("[LOG]Dir found!\n");
+			if((direct = opendir(tmp)) != NULL){
+				//printf("[LOG]Going into new dir\n");
+				run_dir(direct, tmp);
+				closedir(direct);
 			} else {
 				perror("opendir");
 			}
 		}
-
-		printf("%c %s\n", file_t, ent->d_name);
 	}
 }
 
@@ -88,6 +123,7 @@ int print_dir(int argc, char* argv[]){
 		perror("opendir");
 		return EXIT_FAILURE;
 	}
+	closedir(dir);
 }
 
 int main(int argc, char* argv[]){

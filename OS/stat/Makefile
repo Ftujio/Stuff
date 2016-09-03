@@ -1,3 +1,3 @@
 all:
 	clear
-	gcc main.c -o stat
+	gcc main.c -g -o stat
