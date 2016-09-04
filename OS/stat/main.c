@@ -132,7 +132,7 @@ int main(int argc, char* argv[]){
 	if(argc > 1){
 		print_dir(argc, argv);
 	} else { // No arguements passed
-		printf("[ERROR]\t\tMust provide path to the directory\n");
+		printf("[ERROR]\tMust provide path to the directory\n");
 	}
 
 	return 0;
