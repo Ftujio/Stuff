@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
+#include <errno.h>
 #include <string.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -81,6 +82,8 @@ void run_dir(DIR* d, char* p){
 
 	} else {
 		perror("opendir");
+		int errnum = errno;
+		fprintf(stderr, "Error opening directory: %s\n", strerror(errnum));
 		exit(EXIT_FAILURE);
 	}
 
@@ -102,13 +105,12 @@ void run_dir(DIR* d, char* p){
 
 		if(file_t == 'd' && strcmp(ent->d_name, "..") != 0 && strcmp(ent->d_name, ".") != 0){ // Recursion
 			DIR* direct;
-			//printf("[LOG]Dir found!\n");
+
 			if((direct = opendir(tmp)) != NULL){
-				//printf("[LOG]Going into new dir\n");
 				run_dir(direct, tmp);
 				closedir(direct);
 			} else {
-				perror("opendir");
+				fprintf(stderr, "[ERROR]\t%s\n", strerror(errno));
 			}
 		}
 	}
@@ -120,14 +122,18 @@ int print_dir(int argc, char* argv[]){
 	if((dir = opendir(path)) != NULL){
 		run_dir(dir, path);
 	} else {
-		perror("opendir");
+		fprintf(stderr, "[ERROR]\t%s\n", strerror(errno));
 		return EXIT_FAILURE;
 	}
 	closedir(dir);
 }
 
 int main(int argc, char* argv[]){
-	print_dir(argc, argv);
+	if(argc > 1){
+		print_dir(argc, argv);
+	} else { // No arguements passed
+		printf("[ERROR]\t\tMust provide path to the directory\n");
+	}
 
 	return 0;
 }
