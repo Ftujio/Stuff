@@ -25,6 +25,12 @@ void open_file(char* file){
 	} else {
 		printf("%s:\n\n", file);
 		while((bytes_read = read(fd, buff, 100)) > 0){
+			/*for(i = 0; i < bytes_read; i++){
+				if(buff[i] == 'S'){
+					buff[i] = 's';
+				}
+			}*/
+
 			while((c = write(STDOUT_FILENO, buff, bytes_read)) > bytes_read){}
 		}
 	}
