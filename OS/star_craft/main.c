@@ -57,6 +57,11 @@ void* work(void* arg){
 		if(map_minerals >= 8){
 			mine(id);
 			dig = 1;
+		} else if(map_minerals > 0 && map_minerals < 8){
+			center_minerals += map_minerals;
+			map_minerals = 0;
+			pthread_mutex_unlock(&m_map);
+			break;
 		} else {
 			pthread_mutex_unlock(&m_map);
 			break;
@@ -74,7 +79,9 @@ void* work(void* arg){
 }
 
 void create_new_thread(pthread_t* thread, int thread_id){ // "id" should be passed as "worker_num"
-	pthread_create(thread, NULL, work, (void*)&thread_id);
+	int* id = malloc(sizeof(int));
+	*id = thread_id;
+	pthread_create(thread, NULL, work, (void*)id);
 
 	pthread_mutex_lock(&m_worker_num);
 	worker_num++;
@@ -104,8 +111,8 @@ void* get_command(void* arg){
 
 void create_threads(pthread_t* threads, int num, pthread_t* scan){ // "num" should be passed as "WORKER_START_NUM"
 	int i;
+	int* id = malloc(sizeof(int)); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	for(i = 0; i < num; i++){
-		int* id = malloc(sizeof(int)); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		*id = i;
 		pthread_create(&threads[i], NULL, work, (void*)id); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		pthread_mutex_lock(&m_worker_num); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -113,11 +120,14 @@ void create_threads(pthread_t* threads, int num, pthread_t* scan){ // "num" shou
 		pthread_mutex_unlock(&m_worker_num); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	}
 
+	free(id);
+
 	pthread_create(scan, NULL, get_command, (void*)scan);
 }
 
 void finish_game(pthread_t* threads, int num, pthread_t* scan){ // "num" should be passed as "worker_num"
 	int i;
+	printf("NUM OF THREADS TO WAIT FOR: %d\n", num);
 	for(i = 0; i < num; i++){
 		pthread_join(threads[i], NULL);
 	}
@@ -142,11 +152,15 @@ void run_game(){
 void setup_stuff(){
 	pthread_mutex_init(&m_map, NULL);
 	pthread_mutex_init(&m_center, NULL);
+	pthread_mutex_init(&m_worker_num, NULL);
+	pthread_mutex_init(&m_soldier_num, NULL);
 
 	run_game();
 
 	pthread_mutex_destroy(&m_map);
 	pthread_mutex_destroy(&m_center);
+	pthread_mutex_destroy(&m_worker_num);
+	pthread_mutex_destroy(&m_soldier_num);
 }
 
 int main(int argc, char* argv[]){
