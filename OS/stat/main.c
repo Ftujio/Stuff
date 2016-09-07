@@ -11,8 +11,6 @@
 #include <ctype.h>
 #include <time.h>
 
-int flag_a = 0, flag_l = 0, flag_R = 0;
-
 DIR* dir;
 struct stat st;
 struct dirent* ent;
@@ -23,6 +21,10 @@ mode_t mode;
 char* path;
 char* tmp;
 char file_t;
+
+int flag_a = 0;
+int flag_l = 0;
+int flag_R = 0;
 
 char file_type(mode_t mode, int index){
 	char str[11] = "----------";
@@ -182,11 +184,28 @@ int print_dir(char* argv){
 int main(int argc, char* argv[]){
 	if(argc > 1){
 		int i;
-		
-		for(i = 0; i < argc - 1; i++){
-			print_dir(argv[i + 1]);
-			printf("\n###############################\n\n\n");	
+		int c;
+
+		while((c = getopt(argc, argv, "Rla")) != -1){
+			if(c == 'a'){
+				flag_a = 1;
+			}
+			if(c == 'l'){
+				flag_l = 1;
+			}
+			if(c == 'R'){
+				flag_R = 1;
+			}
 		}
+
+		printf("flag_a: %d\nflag_l: %d\nflag_R: %d\n", flag_a, flag_l, flag_R);
+		
+		/*for(i = 0; i < argc - 1; i++){
+			if(argv[i + 1][0] != '-'){ // Don't run print_dir for program flags like -l or -lR etc.
+				print_dir(argv[i + 1]);
+			}
+			printf("\n###############################\n\n\n");	
+		}*/
 	} else { // No arguements passed
 		printf("[ERROR]\tMust provide path to the directory\n");
 	}
