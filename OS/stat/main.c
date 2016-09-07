@@ -201,9 +201,7 @@ int main(int argc, char* argv[]){
 		printf("flag_a: %d\nflag_l: %d\nflag_R: %d\n", flag_a, flag_l, flag_R);
 		
 		for(i = 0; i < argc - 2; i++){
-			//if(argv[i + 1][0] != '-'){ // Don't run print_dir for program flags like -l or -lR etc.
-				print_dir(argv[i + optind]);
-			//}
+			print_dir(argv[i + optind]);
 			printf("\n###############################\n\n\n");	
 		}
 	} else { // No arguements passed
