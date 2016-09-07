@@ -96,6 +96,7 @@ void create_new_thread(pthread_t *thread, int thread_id){ // "id" should be pass
 	if(center_minerals > 8){
 		worker_num++;
 		center_minerals -= 8; 
+		printf("number of workers: %d\n", worker_num);
 	} else {
 		printf("Not enough minerals to create worker! RIPUU\n");
 	}
@@ -116,17 +117,16 @@ void* get_command(void* arg){
 			if(input == 's'){
 				create_new_thread(threads, worker_num);
 			} else if(input == 'm'){
-				pthread_mutex_lock(&m_soldier_num);
 				pthread_mutex_lock(&m_center);
 				if(center_minerals > 8){
+					pthread_mutex_lock(&m_soldier_num);
 					soldier_num++;
+					pthread_mutex_unlock(&m_soldier_num);
 					center_minerals -= 8;
+					pthread_mutex_unlock(&m_center);
 				} else {
 					printf("Not enough minerals to create soldier! RIPUU\n");
-					
 					pthread_mutex_unlock(&m_center);
-					pthread_mutex_unlock(&m_soldier_num);
-
 					break;
 				}
 				printf("number of soldiers: %d\n", soldier_num); // This is for debugging
