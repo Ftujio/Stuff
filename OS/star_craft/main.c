@@ -30,7 +30,7 @@ pthread_mutex_t m_soldier_num;
 
 void transport(int id){
 	printf("SCV %d is transporting minerals\n", id);
-	//sleep(2);
+	sleep(2);
 }
 
 void deliver(int id, int minerals){
@@ -45,9 +45,10 @@ void mine(int id){
 
 void* work(void* arg){
 	int id = *(int*)arg, dig;
-    free(arg);
+	int mined = 0;
+	
+	free(arg);
 
-    int mined = 0;
 	while(1){
 		pthread_mutex_lock(&m_soldier_num);
 		if(soldier_num >= 20){
@@ -91,7 +92,14 @@ void create_new_thread(pthread_t *thread, int thread_id){ // "id" should be pass
 	pthread_create(&thread[worker_num], NULL, work, (void*)id);
 
 	pthread_mutex_lock(&m_worker_num);
-	worker_num++;
+	pthread_mutex_lock(&m_center);
+	if(center_minerals > 8){
+		worker_num++;
+		center_minerals -= 8; 
+	} else {
+		printf("Not enough minerals to create worker! RIPUU\n");
+	}
+	pthread_mutex_unlock(&m_center);
 	pthread_mutex_unlock(&m_worker_num);
 }
 
@@ -101,14 +109,34 @@ void* get_command(void* arg){
     pthread_t *threads = (pthread_t*)arg;
 	while(1){
 		scanf("%c", &input);
+
+		pthread_mutex_lock(&m_soldier_num);
 		if(soldier_num < 20){
+			pthread_mutex_unlock(&m_soldier_num);
 			if(input == 's'){
 				create_new_thread(threads, worker_num);
 			} else if(input == 'm'){
-				soldier_num++;
+				pthread_mutex_lock(&m_soldier_num);
+				pthread_mutex_lock(&m_center);
+				if(center_minerals > 8){
+					soldier_num++;
+					center_minerals -= 8;
+				} else {
+					printf("Not enough minerals to create soldier! RIPUU\n");
+					
+					pthread_mutex_unlock(&m_center);
+					pthread_mutex_unlock(&m_soldier_num);
+
+					break;
+				}
 				printf("number of soldiers: %d\n", soldier_num); // This is for debugging
+				pthread_mutex_unlock(&m_center);
+				pthread_mutex_unlock(&m_soldier_num);
 			}
+		} else if(map_minerals == 0 && center_minerals < 8){
+
 		} else {
+			pthread_mutex_unlock(&m_soldier_num);
 			break;
 		}
 	}
@@ -122,10 +150,10 @@ void create_threads(pthread_t* threads, int num, pthread_t* scan){ // "num" shou
 	for(i = 0; i < num; i++){
         int* id = malloc(sizeof(int));
 		*id = i;
-		pthread_create(&threads[i], NULL, work, (void*)id); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		pthread_mutex_lock(&m_worker_num); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		pthread_create(&threads[i], NULL, work, (void*)id);
+		pthread_mutex_lock(&m_worker_num);
 		worker_num++;
-		pthread_mutex_unlock(&m_worker_num); // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		pthread_mutex_unlock(&m_worker_num);
 	}
 
 	pthread_create(scan, NULL, get_command, threads);
