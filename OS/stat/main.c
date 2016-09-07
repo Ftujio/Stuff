@@ -91,26 +91,43 @@ void run_dir(DIR* d, char* p){
 		pwd = getpwuid(st.st_uid);
 		grp = getgrgid(st.st_gid);
 
-		int i;
-		for(i = 0; i < 10; i++){
-			printf("%c", file_type(mode, i));
-		}
-		//printf("%c %s\n", file_t, ent->d_name);
+		if(flag_l){
+			int i;
+			char timbuf[80];
+			time_t t = st.st_mtime;
+			struct tm lt;
 
-		char timbuf[80];
-
-		time_t t = st.st_mtime;
-		struct tm lt;
+			for(i = 0; i < 10; i++){
+				printf("%c", file_type(mode, i));
+			}
 		
-		localtime_r(&t, &lt);
-		strftime(timbuf, sizeof(timbuf), "%c", &lt);
-		//strftime(buffer, 26, "%d.%m:%Y %H:%M:%S", tm_info);
+			localtime_r(&t, &lt);
+			strftime(timbuf, sizeof(timbuf), "%c", &lt);
+			//strftime(buffer, 26, "%d.%m:%Y %H:%M:%S", tm_info);
 
-		printf("\t%d", (int)st.st_nlink);
-		printf("\t%s\t%s", pwd->pw_name, grp->gr_name);
-		printf("\t%d", (int)st.st_size);
-		printf("\t%s", timbuf);
-		printf("\t%s\n", ent->d_name);
+			printf("\t%d", (int)st.st_nlink);
+			printf("\t%s", pwd->pw_name);
+			printf("\t%s", grp->gr_name);
+			printf("\t%d", (int)st.st_size);
+			printf("\t%s", timbuf);
+			if(flag_a){
+				printf(" %s\n", ent->d_name);
+			} else {
+				if(ent->d_name[0] != '.'){
+					printf(" %s\n", ent->d_name);
+				} else {
+					printf("\n");
+				}
+			}
+		} else {
+			if(flag_a){
+				printf("%c %s\n", file_t, ent->d_name);
+			} else {
+				if(ent->d_name[0] != '.'){
+					printf("%c %s\n", file_t, ent->d_name);
+				}
+			}
+		}
 	}
 
 	printf("\n");
@@ -128,6 +145,7 @@ void run_dir(DIR* d, char* p){
 
 	// For printing the sub directories after displaying the content
 	if(flag_R){
+		printf("------------------------------\n\n");
 		while(1){
 			errno = 0;
 			ent = readdir(d);
@@ -188,8 +206,23 @@ int main(int argc, char* argv[]){
 	if(argc > 1){
 		int i;
 		int c;
+		int o = 1;
 
 		while((c = getopt(argc, argv, "Rla")) != -1){
+			switch(c){
+				case 'a':
+					flag_a = 1;
+					break;
+				case 'l':
+					flag_l = 1;
+					break;
+				case 'R':
+					flag_R = 1;
+					break;
+				default:
+					o = 2;
+			}
+
 			if(c == 'a'){
 				flag_a = 1;
 			}
@@ -200,12 +233,10 @@ int main(int argc, char* argv[]){
 				flag_R = 1;
 			}
 		}
-
-		printf("flag_a: %d\nflag_l: %d\nflag_R: %d\n", flag_a, flag_l, flag_R);
 		
-		for(i = 0; i < argc - 2; i++){
+		for(i = 0; i < argc - o; i++){
 			print_dir(argv[i + optind]);
-			printf("\n###############################\n\n\n");	
+			printf("\n##############################\n\n\n");	
 		}
 	} else { // No arguements passed
 		printf("[ERROR]\tMust provide path to the directory\n");
