@@ -85,7 +85,13 @@ void run_dir(DIR* d, char* p){
 		mode = st.st_mode;
 		file_t = file_type(mode, 0);
 
-		printf("%c %s\n", file_t, ent->d_name);
+		int i;
+		for(i = 0; i < 10; i++){
+			printf("%c", file_type(mode, i));
+		}
+		printf("%c\n", mode.);
+		//printf("%c %s\n", file_t, ent->d_name);
+		printf(" %s\n", ent->d_name);
 	}
 
 	printf("\n");
