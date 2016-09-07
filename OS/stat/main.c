@@ -234,7 +234,7 @@ int main(int argc, char* argv[]){
 			}
 		}
 		
-		for(i = 0; i < argc - o; i++){
+		for(i = 0; i < argc - optind; i++){
 			print_dir(argv[i + optind]);
 			printf("\n##############################\n\n\n");	
 		}
