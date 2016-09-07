@@ -55,7 +55,19 @@ char file_type(mode_t mode, int index){
 void run_dir(DIR* d, char* p){
 	printf("%s: \n", p);
 
-	while((ent = readdir(d)) != NULL){
+	while(1){
+		errno = 0;
+		ent = readdir(d);
+
+		if(ent == NULL){
+			if(errno != 0){
+				perror("readdir");
+				break;
+			}
+			
+			break;
+		}	
+
 		tmp = malloc(sizeof(char)*(strlen(p) + strlen(ent->d_name) + 2));
 		strcpy(tmp, p);
 
@@ -65,7 +77,8 @@ void run_dir(DIR* d, char* p){
 		
 		if((stat(tmp, &st)) == -1){
 			perror("stat");
-       		exit(EXIT_FAILURE);
+       		//exit(EXIT_FAILURE);
+       		break;	
 		}
 
 		mode = st.st_mode;
@@ -83,11 +96,23 @@ void run_dir(DIR* d, char* p){
 	} else {
 		perror("opendir");
 		int errnum = errno;
-		fprintf(stderr, "Error opening directory: %s\n", strerror(errnum));
+		//fprintf(stderr, "Error opening directory: %s\n", strerror(errnum));
 		exit(EXIT_FAILURE);
 	}
 
-	while((ent = readdir(d)) != NULL){
+	while(1){
+		errno = 0;
+		ent = readdir(d);
+
+		if(ent == NULL){
+			if(errno != 0){
+				perror("readdir");
+				break;
+			}
+			
+			break;
+		}
+
 		tmp = malloc(sizeof(char)*(strlen(p) + strlen(ent->d_name) + 2));
 		strcpy(tmp, p);
 
@@ -110,7 +135,8 @@ void run_dir(DIR* d, char* p){
 				run_dir(direct, tmp);
 				closedir(direct);
 			} else {
-				fprintf(stderr, "[ERROR]\t%s\n", strerror(errno));
+				//fprintf(stderr, "[ERROR]\t%s\n", strerror(errno));
+				perror("opendir");
 			}
 		}
 	}
@@ -122,7 +148,8 @@ int print_dir(int argc, char* argv[]){
 	if((dir = opendir(path)) != NULL){
 		run_dir(dir, path);
 	} else {
-		fprintf(stderr, "[ERROR]\t%s\n", strerror(errno));
+		//fprintf(stderr, "[ERROR]\t%s\n", strerror(errno));
+		perror("opendir");
 		return EXIT_FAILURE;
 	}
 	closedir(dir);
@@ -134,6 +161,8 @@ int main(int argc, char* argv[]){
 	} else { // No arguements passed
 		printf("[ERROR]\tMust provide path to the directory\n");
 	}
+
+	free(tmp);
 
 	return 0;
 }
