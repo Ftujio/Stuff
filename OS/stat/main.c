@@ -8,6 +8,7 @@
 #include <dirent.h>
 #include <pwd.h>
 #include <grp.h>
+#include <ctype.h>
 
 int flag_a = 0, flag_l = 0, flag_R = 0;
 
@@ -162,7 +163,7 @@ int main(int argc, char* argv[]){
 		
 		for(i = 0; i < argc - 1; i++){
 			print_dir(argv[i + 1]);
-			printf("\n###############################\n\n\n");
+			printf("\n###############################\n\n\n");	
 		}
 	} else { // No arguements passed
 		printf("[ERROR]\tMust provide path to the directory\n");
