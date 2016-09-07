@@ -106,6 +106,7 @@ void run_dir(DIR* d, char* p){
 		strftime(timbuf, sizeof(timbuf), "%c", &lt);
 		//strftime(buffer, 26, "%d.%m:%Y %H:%M:%S", tm_info);
 
+		printf("\t%d", (int)st.st_nlink);
 		printf("\t%s\t%s", pwd->pw_name, grp->gr_name);
 		printf("\t%d", (int)st.st_size);
 		printf("\t%s", timbuf);
@@ -126,43 +127,45 @@ void run_dir(DIR* d, char* p){
 	}
 
 	// For printing the sub directories after displaying the content
-	while(1){
-		errno = 0;
-		ent = readdir(d);
+	if(flag_R){
+		while(1){
+			errno = 0;
+			ent = readdir(d);
 
-		if(ent == NULL){
-			if(errno != 0){
-				perror("readdir");
+			if(ent == NULL){
+				if(errno != 0){
+					perror("readdir");
+					break;
+				}
+
 				break;
 			}
 
-			break;
-		}
+			tmp = malloc(sizeof(char)*(strlen(p) + strlen(ent->d_name) + 2));
+			strcpy(tmp, p);
 
-		tmp = malloc(sizeof(char)*(strlen(p) + strlen(ent->d_name) + 2));
-		strcpy(tmp, p);
-
-		strcat(tmp, "/");
-		strcat(tmp, ent->d_name);
-		//printf("[LOG]tmp: %s\n", tmp);
+			strcat(tmp, "/");
+			strcat(tmp, ent->d_name);
+			//printf("[LOG]tmp: %s\n", tmp);
 		
-		if((stat(tmp, &st)) == -1){
-			perror("stat");
-       		exit(EXIT_FAILURE);
-		}
+			if((stat(tmp, &st)) == -1){
+				perror("stat");
+	       		exit(EXIT_FAILURE);
+			}
 
-		mode = st.st_mode;
-		file_t = file_type(mode, 0);
+			mode = st.st_mode;
+			file_t = file_type(mode, 0);
 
-		if(file_t == 'd' && strcmp(ent->d_name, "..") != 0 && strcmp(ent->d_name, ".") != 0){ // Recursion
-			DIR* direct;
+			if(file_t == 'd' && strcmp(ent->d_name, "..") != 0 && strcmp(ent->d_name, ".") != 0){ // Recursion
+				DIR* direct;
 
-			if((direct = opendir(tmp)) != NULL){
-				run_dir(direct, tmp);
-				closedir(direct);
-			} else {
-				//fprintf(stderr, "[ERROR]\t%s\n", strerror(errno));
-				perror("opendir");
+				if((direct = opendir(tmp)) != NULL){
+					run_dir(direct, tmp);
+					closedir(direct);
+				} else {
+					//fprintf(stderr, "[ERROR]\t%s\n", strerror(errno));
+					perror("opendir");
+				}
 			}
 		}
 	}
