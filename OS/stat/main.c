@@ -14,8 +14,8 @@ int flag_a = 0, flag_l = 0, flag_R = 0;
 DIR* dir;
 struct stat st;
 struct dirent* ent;
-struct group* gr;
-struct passwd* pwd;
+//struct group* gr;
+//struct passwd* pwd;
 mode_t mode;
 
 char* path;
@@ -100,6 +100,7 @@ void run_dir(DIR* d, char* p){
 		exit(EXIT_FAILURE);
 	}
 
+	// For printing the sub directories after displaying the content
 	while(1){
 		errno = 0;
 		ent = readdir(d);
@@ -109,7 +110,7 @@ void run_dir(DIR* d, char* p){
 				perror("readdir");
 				break;
 			}
-			
+
 			break;
 		}
 
@@ -142,8 +143,8 @@ void run_dir(DIR* d, char* p){
 	}
 }
 
-int print_dir(int argc, char* argv[]){
-	path = argv[1];
+int print_dir(char* argv){
+	path = argv;
 
 	if((dir = opendir(path)) != NULL){
 		run_dir(dir, path);
@@ -157,7 +158,12 @@ int print_dir(int argc, char* argv[]){
 
 int main(int argc, char* argv[]){
 	if(argc > 1){
-		print_dir(argc, argv);
+		int i;
+		
+		for(i = 0; i < argc - 1; i++){
+			print_dir(argv[i + 1]);
+			printf("\n###############################\n\n\n");
+		}
 	} else { // No arguements passed
 		printf("[ERROR]\tMust provide path to the directory\n");
 	}
