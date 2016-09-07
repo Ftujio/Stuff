@@ -9,14 +9,15 @@
 #include <pwd.h>
 #include <grp.h>
 #include <ctype.h>
+#include <time.h>
 
 int flag_a = 0, flag_l = 0, flag_R = 0;
 
 DIR* dir;
 struct stat st;
 struct dirent* ent;
-//struct group* gr;
-//struct passwd* pwd;
+struct group* grp;
+struct passwd* pwd;
 mode_t mode;
 
 char* path;
@@ -85,13 +86,28 @@ void run_dir(DIR* d, char* p){
 		mode = st.st_mode;
 		file_t = file_type(mode, 0);
 
+		pwd = getpwuid(st.st_uid);
+		grp = getgrgid(st.st_gid);
+
 		int i;
 		for(i = 0; i < 10; i++){
 			printf("%c", file_type(mode, i));
 		}
-		printf("%c\n", mode.);
 		//printf("%c %s\n", file_t, ent->d_name);
-		printf(" %s\n", ent->d_name);
+
+		char timbuf[80];
+
+		time_t t = st.st_mtime;
+		struct tm lt;
+		
+		localtime_r(&t, &lt);
+		strftime(timbuf, sizeof(timbuf), "%c", &lt);
+		//strftime(buffer, 26, "%d.%m:%Y %H:%M:%S", tm_info);
+
+		printf("\t%s\t%s", pwd->pw_name, grp->gr_name);
+		printf("\t%d", (int)st.st_size);
+		printf("\t%s", timbuf);
+		printf("\t%s\n", ent->d_name);
 	}
 
 	printf("\n");
