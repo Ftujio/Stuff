@@ -27,9 +27,9 @@ int main(int argc, char* argv[]){
 	
 		if(pid == 0){ // Child process
 			if(execv(path, args) == -1){
-				printf("Error!\n");
+				perror("fork");
+				break;
 			}
-			break;
 		} else if(pid < 0){
 			printf(" - Failed to fork!\n");
 		} else { // Parent process
