@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Maina</title>
+	<meta charset="utf-8">
+</head>
+
+<body>
+	<form action="adminServlet">
+		<input type="text" name="name"><br>
+		password: <input type="password" name="password"><br>
+		<input type="submit" value="Login">
+	</form>
+</body>
+</html>
