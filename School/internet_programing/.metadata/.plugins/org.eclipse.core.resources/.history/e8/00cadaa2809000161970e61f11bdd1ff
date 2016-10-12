@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Sample Servlet</title>
+	<title>Maina</title>
 	<meta charset="utf-8">
 </head>
 
 <body>
-	<form action="adminServlet" method="POST">
+	<form action="adminServlet">
 		Name: <input type="text" name="name"><br>
 		password: <input type="password" name="password"><br>
 		<input type="submit" value="Login">

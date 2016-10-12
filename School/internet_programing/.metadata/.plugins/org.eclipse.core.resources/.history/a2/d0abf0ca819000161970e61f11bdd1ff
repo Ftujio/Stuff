@@ -10,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 public class AdminServlet extends HttpServlet{
 	
-	private static final long serialVersionUID = 112648655659831;
-	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
