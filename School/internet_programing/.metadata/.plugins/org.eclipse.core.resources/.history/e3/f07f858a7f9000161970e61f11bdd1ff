@@ -1,0 +1,12 @@
+<?xml vesion="1.0" encoding="UTF-8"?>
+<web-app>
+	<servlet>
+		<servlet-name>AdminServlet</servlet-name>
+		<servlet-class>bg.elsys.ip.servlet.AdminServer</servlet-class>
+	</servlet>
+	
+	<servlet-maping>
+		<servlet-name>
+		</servlet-name>
+	</servlet-maping>
+</web-app>
