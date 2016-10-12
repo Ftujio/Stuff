@@ -1,0 +1,5 @@
+package bg.elsys.ip.servlet;
+
+public class User {
+
+}

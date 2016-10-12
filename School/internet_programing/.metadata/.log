@@ -483,3 +483,15 @@ Caused by: org.xml.sax.SAXParseExceptionpublicId: platform:/resource/SampleServl
 
 !ENTRY org.eclipse.jface.text 2 0 2016-10-12 16:24:14.287
 !MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.round'
+
+!ENTRY org.eclipse.jface.text 2 0 2016-10-12 17:00:35.276
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.number'
+
+!ENTRY org.eclipse.jface.text 2 0 2016-10-12 17:00:35.277
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.round'
+
+!ENTRY org.eclipse.jface.text 2 0 2016-10-12 17:01:25.801
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.number'
+
+!ENTRY org.eclipse.jface.text 2 0 2016-10-12 17:01:25.801
+!MESSAGE Duplicate template id: 'org.eclipse.wst.xslt.templates.xpath.round'
