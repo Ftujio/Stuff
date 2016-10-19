@@ -28,4 +28,5 @@
 *.app
 
 #Java Eclipse Folders
-*.metadata
+School/internet_programing/.metadata
+School/internet_programing/.recommenders
