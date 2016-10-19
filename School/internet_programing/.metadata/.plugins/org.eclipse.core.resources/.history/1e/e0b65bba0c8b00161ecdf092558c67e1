@@ -1,7 +1,0 @@
-package bg.elsys.ip.servlet;
-
-import javax.servlet.http.HttpServlet;
-
-public class AdminServlet extends HttpServlet{
-	public void doGet
-}
