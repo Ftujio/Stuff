@@ -17,6 +17,7 @@ function getData() {
 }
 
 $(document).ready(fucntion() {
+	alert('page loaded');
 	$('#button').click(fucntion() {
 		alert('button clicked');
 		getData();
