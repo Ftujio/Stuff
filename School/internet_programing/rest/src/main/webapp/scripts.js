@@ -1,6 +1,6 @@
 function getData() {
 	$.ajax({
-		url: "http:localhost:8181/rst/users",
+		url: "http:localhost:8181/rst/api/users",
 		type: "GET",
 		dataType: "json",
 		success: function(data){ // When the GET request is successful
@@ -9,7 +9,7 @@ function getData() {
 				var tr = $('<tr>');
 				tr.append('<td>' + data[index].id + '</td>');
 				tr.append('<td>' + data[index].name + '</td>');
-				tr.append(',</tr>');
+				tr.append('</tr>');
 				$('#usersTable').append(tr);
 			});
 		}
