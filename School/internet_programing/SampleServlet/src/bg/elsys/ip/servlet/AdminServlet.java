@@ -20,8 +20,7 @@ public class AdminServlet extends HttpServlet {
 		response.setContentType("text/html");
 
 		request.setAttribute("users", getUsers());
-		getServletContext().getRequestDispatcher("/WEB-INF/admin.jsp")
-			.forward(request, response);
+		getServletContext().getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
 	}
 	
 	private List<User> getUsers() {
