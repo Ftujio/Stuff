@@ -18,9 +18,14 @@ public class AdminServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
-
+		
+		String ipAddress = request.getHeader("X-FORWARDED-FOR");  
+		if (ipAddress == null) {  
+	    	ipAddress = request.getRemoteAddr();
+		}
+	    	
 		request.setAttribute("users", getUsers());
-		request.setAttribute("test", "maina");
+		request.setAttribute("ip", ipAddress);
 		getServletContext().getRequestDispatcher("/WEB-INF/admin.jsp").forward(request, response);
 	}
 	
