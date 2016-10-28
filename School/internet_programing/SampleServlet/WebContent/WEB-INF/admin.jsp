@@ -23,6 +23,9 @@
 				<td><a href="userServlet?name=${user.name}">Go to user page</a></td>
 			</tr>
 		</c:forEach>
+		<tr>
+			<td></td>
+		</tr>
 	</table>
 </body>
 </html>
